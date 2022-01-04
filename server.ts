@@ -50,22 +50,14 @@ app.get("/tostudy/:userid", async (req, res) => {
   res.json(dbres.rows);
 });
 
-app.get("/tags/:resourcesid", async (req, res) => {
-  const resourcesid = req.params.resources;
+app.get("/tags/:resourceid", async (req, res) => {
+  const resourcesid = req.params.resourceid;
   const dbres = await client.query(
-    "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourcesid=$1 ",
+    "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourceid=$1 ",
     [resourcesid]
   );
   res.json(dbres.rows);
-});
-
-app.get("/tags/:resourcesid", async (req, res) => {
-  const resourcesid = req.params.resources;
-  const dbres = await client.query(
-    "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourcesid=$1 ",
-    [resourcesid]
-  );
-  res.json(dbres.rows);
+  console.log(dbres);
 });
 
 app.get("/tostudy/:userid", async (req, res) => {
@@ -116,6 +108,15 @@ app.post("/tostudy", async (req, res) => {
   res.json(dbres.rows);
 });
 
+app.post("/tagrelations", async (req, res) => {
+  const { tagid, resourceid } = req.body;
+  const dbres = await client.query(
+    "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
+    [tagid, resourceid]
+  );
+  res.json(dbres.rows);
+});
+
 app.delete("/tostudy", async (req, res) => {
   const { userid, resourceid } = req.body;
   const dbres = await client.query(
@@ -130,6 +131,29 @@ app.post("/interactions", async (req, res) => {
   const dbres = await client.query(
     "INSERT INTO interactions (userid, resourceid,likes, comment)VALUES ($1,$2,$3,$4) returning * ",
     [userid, resourceid, likes, comment]
+  );
+  res.json(dbres.rows);
+});
+
+app.get("/interactions", async (req, res) => {
+  const dbres = await client.query("select * from interactions ");
+  res.json(dbres.rows);
+});
+
+app.get("/interactions/:resourceid", async (req, res) => {
+  const { resourceid } = req.body;
+  const dbres = await client.query(
+    "select * from interactions where resourceid = $1 ",
+    [resourceid]
+  );
+  res.json(dbres.rows);
+});
+
+app.post("/tags", async (req, res) => {
+  const { category } = req.body;
+  const dbres = await client.query(
+    "INSERT INTO tags (category)VALUES ($1) returning * ",
+    [category]
   );
   res.json(dbres.rows);
 });
