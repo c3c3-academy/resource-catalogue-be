@@ -55,6 +55,11 @@ CREATE TABLE Interactions (
   FOREIGN KEY (userID) REFERENCES Users(id)
  )
 
+Insert into users(name,is_faculty) VALUES ('Emma', false),('Toye', false),('Raj',false),('Alisa', false),('Beri', false), ('Chris',false),('Veta', false),('David', false),('Ed', false),('Faith', false),('Grace', false),('Hanna', false),('Jamie', false),('Jenna', false),
+('Jo', false),('Kasia', false),('Linus', false),('Martha', false),('Matt P', false), ('Nico', false), ('Renée', false),('Truman', false),
+('Richard', True),('Katie', True),('Natalya', True),('Neill', True),('Matt M', True),('Michelle', True),('Muhammad', True),('Esme', True),('Mateusz', True) 
+                                                                          
+
 
 
 
