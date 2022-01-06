@@ -19,12 +19,11 @@ const dbConfig = {
 };
 
 const app = express();
+const client = new Client(dbConfig);
+client.connect();
 
 app.use(express.json()); //add body parser to each following route handler
 app.use(cors()); //add CORS support to each following route handler
-
-const client = new Client(dbConfig);
-client.connect();
 
 app.get("/resources", async (req, res) => {
   const dbres = await client.query("select * from resources");
@@ -129,7 +128,6 @@ app.post("/resources", async (req, res) => {
       reason,
     ]
   );
-  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
@@ -169,7 +167,6 @@ app.post("/tagrelations", async (req, res) => {
     "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
     [tagid, resourceid]
   );
-  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
@@ -247,7 +244,6 @@ app.post("/tags", async (req, res) => {
     "INSERT INTO tags (category)VALUES ($1) returning * ",
     [category]
   );
-  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
