@@ -28,17 +28,34 @@ client.connect();
 
 app.get("/resources", async (req, res) => {
   const dbres = await client.query("select * from resources");
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      resources: dbres.rows,
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(200).json({
+      status: "success",
+      resources: dbres.rows,
+      message: "no items in resources",
+    });
+  }
 });
 
 app.get("/users", async (req, res) => {
   const dbres = await client.query("select * from users");
-  res.json(dbres.rows);
+  res.status(200).json({
+    status: "success",
+    users: dbres.rows,
+  });
 });
 
 app.get("/tags", async (req, res) => {
   const dbres = await client.query("select * from tags");
-  res.json(dbres.rows);
+  res.status(200).json({
+    status: "success",
+    tags: dbres.rows,
+  });
 });
 
 app.get("/tostudy/:userid", async (req, res) => {
@@ -47,7 +64,10 @@ app.get("/tostudy/:userid", async (req, res) => {
     "select * from (resources join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
     [userid]
   );
-  res.json(dbres.rows);
+  res.status(200).json({
+    status: "success",
+    tostudy: dbres.rows,
+  });
 });
 
 app.get("/tags/:resourceid", async (req, res) => {
@@ -56,8 +76,10 @@ app.get("/tags/:resourceid", async (req, res) => {
     "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourceid=$1 ",
     [resourcesid]
   );
-  res.json(dbres.rows);
-  console.log(dbres);
+  res.status(200).json({
+    status: "success",
+    resourceid: dbres.rows,
+  });
 });
 
 app.get("/tostudy/:userid", async (req, res) => {
@@ -66,37 +88,58 @@ app.get("/tostudy/:userid", async (req, res) => {
     "select * from (resources left join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
     [userid]
   );
-  res.json(dbres.rows);
-  console.log(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      tostudylist: dbres.rows,
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(200).json({
+      status: "success",
+      tostudylist: dbres.rows,
+      message: "no items in tostudylist",
+    });
+  }
 });
 
 app.post("/resources", async (req, res) => {
   const {
-    resourceName,
-    authorName,
+    resourcename,
+    authorname,
     url,
     description,
-    contentType,
-    contentStage,
-    postedByUserId,
-    isRecommended,
+    contenttype,
+    contentstage,
+    postedbyuserid,
+    isrecommended,
     reason,
   } = req.body;
+
   const dbres = await client.query(
-    "INSERT INTO resources (resourceName, authorName, url, description,contentType, contentStage,postedByUserID,isRecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
+    "INSERT INTO resources (resourcename, authorname, url, description,contenttype, contentstage,postedbyuserid,isrecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
     [
-      resourceName,
-      authorName,
+      resourcename,
+      authorname,
       url,
       description,
-      contentType,
-      contentStage,
-      postedByUserId,
-      isRecommended,
+      contenttype,
+      contentstage,
+      postedbyuserid,
+      isrecommended,
       reason,
     ]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      resourceAdded: dbres.rows[0],
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+      message: "no resources added",
+    });
+  }
 });
 
 app.post("/tostudy", async (req, res) => {
@@ -105,7 +148,18 @@ app.post("/tostudy", async (req, res) => {
     "INSERT INTO tostudy (userid, resourceid) VALUES ($1,$2)  returning *",
     [userid, resourceid]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      tostudyAdded: dbres.rows[0],
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+
+      message: "no resources added",
+    });
+  }
 });
 
 app.post("/tagrelations", async (req, res) => {
@@ -114,7 +168,17 @@ app.post("/tagrelations", async (req, res) => {
     "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
     [tagid, resourceid]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      tagrelations: dbres.rows[0],
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+      message: "no tags added",
+    });
+  }
 });
 
 app.delete("/tostudy", async (req, res) => {
@@ -123,7 +187,10 @@ app.delete("/tostudy", async (req, res) => {
     "Delete from tostudy where userid=$1 and resourceid=$2 returning * ",
     [userid, resourceid]
   );
-  res.json(dbres.rows);
+  res.status(200).json({
+    status: "success",
+    toStudyDeleted: dbres.rows,
+  });
 });
 
 app.post("/interactions", async (req, res) => {
@@ -132,12 +199,25 @@ app.post("/interactions", async (req, res) => {
     "INSERT INTO interactions (userid, resourceid,likes, comment)VALUES ($1,$2,$3,$4) returning * ",
     [userid, resourceid, likes, comment]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      interactions: dbres.rows[0],
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+      message: "no interactions added",
+    });
+  }
 });
 
 app.get("/interactions", async (req, res) => {
   const dbres = await client.query("select * from interactions ");
-  res.json(dbres.rows);
+  res.status(200).json({
+    status: "success",
+    interactions: dbres.rows,
+  });
 });
 
 app.get("/interactions/:resourceid", async (req, res) => {
@@ -146,7 +226,17 @@ app.get("/interactions/:resourceid", async (req, res) => {
     "select * from interactions where resourceid = $1 ",
     [resourceid]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      interactions: dbres.rows,
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+      message: "no interactions found",
+    });
+  }
 });
 
 app.post("/tags", async (req, res) => {
@@ -155,7 +245,17 @@ app.post("/tags", async (req, res) => {
     "INSERT INTO tags (category)VALUES ($1) returning * ",
     [category]
   );
-  res.json(dbres.rows);
+  if (dbres.rows.length > 0) {
+    res.status(200).json({
+      status: "success",
+      tags: dbres.rows[0],
+    });
+  } else if (dbres.rows.length === 0) {
+    res.status(400).json({
+      status: "failed",
+      message: "no tags added",
+    });
+  }
 });
 
 //Start the server on the given port
