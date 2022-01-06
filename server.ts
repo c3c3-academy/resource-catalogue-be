@@ -129,6 +129,7 @@ app.post("/resources", async (req, res) => {
       reason,
     ]
   );
+  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
@@ -168,6 +169,7 @@ app.post("/tagrelations", async (req, res) => {
     "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
     [tagid, resourceid]
   );
+  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
@@ -245,6 +247,7 @@ app.post("/tags", async (req, res) => {
     "INSERT INTO tags (category)VALUES ($1) returning * ",
     [category]
   );
+  res.header("Access-Control-Allow-Origin", "*");
   if (dbres.rows.length > 0) {
     res.status(200).json({
       status: "success",
