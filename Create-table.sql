@@ -54,10 +54,10 @@ CREATE TABLE resources(
   contenttype VARCHAR(200) NOT NULL,
   contentstage VARCHAR(200) NOT NULL,
   creationdate TIMESTAMP DEFAULT NOW(),
-  userid INT NOT NULL,
+  postedbyuserid INT NOT NULL,
   isrecommended VARCHAR(7) NOT NULL,
   reason VARCHAR NOT NULL,
-  FOREIGN KEY (userid) REFERENCES users(id)
+  FOREIGN KEY (postedbyuserid) REFERENCES users(id)
 );
   
 CREATE TABLE tags (
