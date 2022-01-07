@@ -11,7 +11,7 @@ CREATE TABLE users(
   isfaculty BOOLEAN NOT NULL
 );
 
-INSERT INTO TABLE users(name, isfaculty)
+INSERT INTO users(name, isfaculty)
 VALUES ('Emma', false),
 ('Toye', false),
 ('Raj',false),
