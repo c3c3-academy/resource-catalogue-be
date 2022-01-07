@@ -27,97 +27,110 @@ const client = new Client(dbConfig);
 client.connect();
 
 app.get("/resources", async (req, res) => {
-  const dbres = await client.query("select * from resources");
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      resources: dbres.rows,
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(200).json({
-      status: "success",
-      resources: dbres.rows,
-      message: "no items in resources",
-    });
+  try {
+    const dbres = await client.query("select * from resources");
+
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        resources: dbres.rows,
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(200).json({
+        status: "success",
+        resources: dbres.rows,
+        message: "no items in resources",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(400).send(err);
   }
 });
 
 app.get("/users", async (req, res) => {
-  const dbres = await client.query("select * from users");
-  res.status(200).json({
-    status: "success",
-    users: dbres.rows,
-  });
+  try {
+    const dbres = await client.query("select * from users");
+    res.status(200).json({
+      status: "success",
+      users: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.get("/tags", async (req, res) => {
-  const dbres = await client.query("select * from tags");
-  res.status(200).json({
-    status: "success",
-    tags: dbres.rows,
-  });
+  try {
+    const dbres = await client.query("select * from tags");
+    res.status(200).json({
+      status: "success",
+      tags: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.get("/tostudy/:userid", async (req, res) => {
-  const userid = req.params.userid;
-  const dbres = await client.query(
-    "select * from (resources join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
-    [userid]
-  );
-  res.status(200).json({
-    status: "success",
-    tostudy: dbres.rows,
-  });
+  try {
+    const userid = req.params.userid;
+    const dbres = await client.query(
+      "select * from (resources join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
+      [userid]
+    );
+    res.status(200).json({
+      status: "success",
+      tostudy: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.get("/tags/:resourceid", async (req, res) => {
-  const resourcesid = req.params.resourceid;
-  const dbres = await client.query(
-    "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourceid=$1 ",
-    [resourcesid]
-  );
-  res.status(200).json({
-    status: "success",
-    resourceid: dbres.rows,
-  });
+  try {
+    const resourcesid = req.params.resourceid;
+    const dbres = await client.query(
+      "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourceid=$1 ",
+      [resourcesid]
+    );
+    res.status(200).json({
+      status: "success",
+      resourceid: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.get("/tostudy/:userid", async (req, res) => {
-  const userid = req.params.resources;
-  const dbres = await client.query(
-    "select * from (resources left join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
-    [userid]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      tostudylist: dbres.rows,
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(200).json({
-      status: "success",
-      tostudylist: dbres.rows,
-      message: "no items in tostudylist",
-    });
+  try {
+    const userid = req.params.resources;
+    const dbres = await client.query(
+      "select * from (resources left join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
+      [userid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tostudylist: dbres.rows,
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(200).json({
+        status: "success",
+        tostudylist: dbres.rows,
+        message: "no items in tostudylist",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.post("/resources", async (req, res) => {
-  const {
-    resourcename,
-    authorname,
-    url,
-    description,
-    contenttype,
-    contentstage,
-    postedbyuserid,
-    isrecommended,
-    reason,
-  } = req.body;
-
-  const dbres = await client.query(
-    "INSERT INTO resources (resourcename, authorname, url, description,contenttype, contentstage,postedbyuserid,isrecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
-    [
+  try {
+    const {
       resourcename,
       authorname,
       url,
@@ -127,134 +140,179 @@ app.post("/resources", async (req, res) => {
       postedbyuserid,
       isrecommended,
       reason,
-    ]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      resourceAdded: dbres.rows[0],
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
-      message: "no resources added",
-    });
+    } = req.body;
+
+    const dbres = await client.query(
+      "INSERT INTO resources (resourcename, authorname, url, description,contenttype, contentstage,postedbyuserid,isrecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
+      [
+        resourcename,
+        authorname,
+        url,
+        description,
+        contenttype,
+        contentstage,
+        postedbyuserid,
+        isrecommended,
+        reason,
+      ]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        resourceAdded: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no resources added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.post("/tostudy", async (req, res) => {
-  const { userid, resourceid } = req.body;
-  const dbres = await client.query(
-    "INSERT INTO tostudy (userid, resourceid) VALUES ($1,$2)  returning *",
-    [userid, resourceid]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      tostudyAdded: dbres.rows[0],
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
+  try {
+    const { userid, resourceid } = req.body;
+    const dbres = await client.query(
+      "INSERT INTO tostudy (userid, resourceid) VALUES ($1,$2)  returning *",
+      [userid, resourceid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tostudyAdded: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
 
-      message: "no resources added",
-    });
+        message: "no resources added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.post("/tagrelations", async (req, res) => {
-  const { tagid, resourceid } = req.body;
-  const dbres = await client.query(
-    "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
-    [tagid, resourceid]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      tagrelations: dbres.rows[0],
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
-      message: "no tags added",
-    });
+  try {
+    const { tagid, resourceid } = req.body;
+    const dbres = await client.query(
+      "INSERT INTO tagrelations (tagid, resourceid) VALUES ($1,$2)  returning *",
+      [tagid, resourceid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tagrelations: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no tags added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.delete("/tostudy", async (req, res) => {
-  const { userid, resourceid } = req.body;
-  const dbres = await client.query(
-    "Delete from tostudy where userid=$1 and resourceid=$2 returning * ",
-    [userid, resourceid]
-  );
-  res.status(200).json({
-    status: "success",
-    toStudyDeleted: dbres.rows,
-  });
+  try {
+    const { userid, resourceid } = req.body;
+    const dbres = await client.query(
+      "Delete from tostudy where userid=$1 and resourceid=$2 returning * ",
+      [userid, resourceid]
+    );
+    res.status(200).json({
+      status: "success",
+      toStudyDeleted: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.post("/interactions", async (req, res) => {
-  const { userid, resourceid, likes, comment } = req.body;
-  const dbres = await client.query(
-    "INSERT INTO interactions (userid, resourceid,likes, comment)VALUES ($1,$2,$3,$4) returning * ",
-    [userid, resourceid, likes, comment]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      interactions: dbres.rows[0],
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
-      message: "no interactions added",
-    });
+  try {
+    const { userid, resourceid, likes, comment } = req.body;
+    const dbres = await client.query(
+      "INSERT INTO interactions (userid, resourceid,likes, comment)VALUES ($1,$2,$3,$4) returning * ",
+      [userid, resourceid, likes, comment]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        interactions: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no interactions added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.get("/interactions", async (req, res) => {
-  const dbres = await client.query("select * from interactions ");
-  res.status(200).json({
-    status: "success",
-    interactions: dbres.rows,
-  });
-});
-
-app.get("/interactions/:resourceid", async (req, res) => {
-  const { resourceid } = req.body;
-  const dbres = await client.query(
-    "select * from interactions where resourceid = $1 ",
-    [resourceid]
-  );
-  if (dbres.rows.length > 0) {
+  try {
+    const dbres = await client.query("select * from interactions ");
     res.status(200).json({
       status: "success",
       interactions: dbres.rows,
     });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
-      message: "no interactions found",
-    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.get("/interactions/:resourceid", async (req, res) => {
+  try {
+    const { resourceid } = req.body;
+    const dbres = await client.query(
+      "select * from interactions where resourceid = $1 ",
+      [resourceid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        interactions: dbres.rows,
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no interactions found",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
 app.post("/tags", async (req, res) => {
-  const { category } = req.body;
-  const dbres = await client.query(
-    "INSERT INTO tags (category)VALUES ($1) returning * ",
-    [category]
-  );
-  if (dbres.rows.length > 0) {
-    res.status(200).json({
-      status: "success",
-      tags: dbres.rows[0],
-    });
-  } else if (dbres.rows.length === 0) {
-    res.status(400).json({
-      status: "failed",
-      message: "no tags added",
-    });
+  try {
+    const { category } = req.body;
+    const dbres = await client.query(
+      "INSERT INTO tags (category)VALUES ($1) returning * ",
+      [category]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tags: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no tags added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 });
 
