@@ -141,7 +141,7 @@ app.post("/resources", async (req, res) => {
       reason,
     } = req.body;
     const dbres = await client.query(
-      "INSERT INTO resources (resourcename, authorname, url, description,contenttype, contentstage,postedbyuserid,isrecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
+      "INSERT INTO resources (resourcename, authorname, url, description, contenttype, contentstage, postedbyuserid, isrecommended, reason) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *",
       [
         resourcename,
         authorname,
