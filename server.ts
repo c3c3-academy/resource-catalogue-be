@@ -19,12 +19,11 @@ const dbConfig = {
 };
 
 const app = express();
+const client = new Client(dbConfig);
+client.connect();
 
 app.use(express.json()); //add body parser to each following route handler
 app.use(cors()); //add CORS support to each following route handler
-
-const client = new Client(dbConfig);
-client.connect();
 
 app.get("/resources", async (req, res) => {
   try {
