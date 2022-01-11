@@ -94,9 +94,11 @@ app.get("/tags/:resourceid", async (req, res) => {
       "select category from (tags join tagrelations on tags.id=tagrelations.tagid) where resourceid=$1 ",
       [resourcesid]
     );
+    const tags: string[] = [];
+    dbres.rows.forEach((tagObj) => tags.push(tagObj.category));
     res.status(200).json({
       status: "success",
-      resourceid: dbres.rows,
+      tags: tags,
     });
   } catch (error) {
     console.error(error);
