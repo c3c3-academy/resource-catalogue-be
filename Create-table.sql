@@ -85,7 +85,7 @@ CREATE TABLE interactions (
   id SERIAL PRIMARY KEY NOT NULL,
   userid INT NOT NULL,
   resourceid INT NOT NULL,
-  likes Boolean NOT NULL,
+  rating INT NOT NULL,
   comment VARCHAR DEFAULT NULL,
   FOREIGN KEY (resourceid) REFERENCES resources(id),
   FOREIGN KEY (userid) REFERENCES users(id)

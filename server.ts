@@ -92,10 +92,9 @@ app.get("/tags/:resourceid", async (req, res) => {
 app.get("/tostudy/:userid", async (req, res) => {
   try {
     const userid = req.params.resources;
-    const dbres = await client.query(
-      "select * from (resources left join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
-      [userid]
-    );
+    const dbres = await client.query("select * from tostudy where userid=$1 ", [
+      userid,
+    ]);
     if (dbres.rows.length > 0) {
       res.status(200).json({
         status: "success",
@@ -221,10 +220,10 @@ app.delete("/tostudy", async (req, res) => {
 
 app.post("/interactions", async (req, res) => {
   try {
-    const { userid, resourceid, likes, comment } = req.body;
+    const { userid, resourceid, rating, comment } = req.body;
     const dbres = await client.query(
-      "INSERT INTO interactions (userid, resourceid,likes, comment)VALUES ($1,$2,$3,$4) returning * ",
-      [userid, resourceid, likes, comment]
+      "INSERT INTO interactions (userid, resourceid, rating, comment)VALUES ($1,$2,$3,$4) returning * ",
+      [userid, resourceid, rating, comment]
     );
     if (dbres.rows.length > 0) {
       res.status(200).json({
