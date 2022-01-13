@@ -91,7 +91,7 @@ app.get("/tags/:resourceid", async (req, res) => {
 
 app.get("/tostudy/:userid", async (req, res) => {
   try {
-    const userid = req.params.resources;
+    const userid = req.params.userid;
     const dbres = await client.query("select * from tostudy where userid=$1 ", [
       userid,
     ]);
