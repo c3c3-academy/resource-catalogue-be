@@ -71,22 +71,6 @@ app.get("/tags", async (req, res) => {
   }
 });
 
-app.get("/tostudy/:userid", async (req, res) => {
-  try {
-    const userid = req.params.userid;
-    const dbres = await client.query(
-      "select * from (resources join tostudy on resources.id=tostudy.resourceid) where userid=$1 ",
-      [userid]
-    );
-    res.status(200).json({
-      status: "success",
-      tostudy: dbres.rows,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 app.get("/tags/:resourceid", async (req, res) => {
   try {
     const resourcesid = req.params.resourceid;
