@@ -271,7 +271,7 @@ app.get("/interactions", async (req, res) => {
 
 app.get("/interactions/:resourceid", async (req, res) => {
   try {
-    const { resourceid } = req.body;
+    const resourceid = req.params.resourceid;
     const dbres = await client.query(
       "select * from interactions where resourceid = $1 ",
       [resourceid]
@@ -294,7 +294,7 @@ app.get("/interactions/:resourceid", async (req, res) => {
 
 app.get("/interactionsbyuser/:userid", async (req, res) => {
   try {
-    const { userid } = req.body;
+    const userid = req.params.userid;
     const dbres = await client.query(
       "select * from interactions where userid = $1 ",
       [userid]
