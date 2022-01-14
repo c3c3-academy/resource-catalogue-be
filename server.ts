@@ -241,6 +241,22 @@ app.post("/interactions", async (req, res) => {
   }
 });
 
+app.delete("/interactions", async (req, res) => {
+  try {
+    const { userid, resourceid } = req.body;
+    const dbres = await client.query(
+      "Delete from interactions where userid=$1 and resourceid=$2 returning * ",
+      [userid, resourceid]
+    );
+    res.status(200).json({
+      status: "success",
+      InteractionsDeleted: dbres.rows,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.get("/interactions", async (req, res) => {
   try {
     const dbres = await client.query("select * from interactions ");
@@ -259,6 +275,29 @@ app.get("/interactions/:resourceid", async (req, res) => {
     const dbres = await client.query(
       "select * from interactions where resourceid = $1 ",
       [resourceid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        interactions: dbres.rows,
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no interactions found",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.get("/interactionsbyuser/:userid", async (req, res) => {
+  try {
+    const { userid } = req.body;
+    const dbres = await client.query(
+      "select * from interactions where userid = $1 ",
+      [userid]
     );
     if (dbres.rows.length > 0) {
       res.status(200).json({
