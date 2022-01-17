@@ -227,7 +227,7 @@ app.delete("/tagrelations", async (req, res) => {
     } else if (dbres.rows.length === 0) {
       res.status(400).json({
         status: "failed",
-        message: "no tags deleted",
+        message: "no tagrelations deleted",
       });
     }
   } catch (error) {
@@ -364,6 +364,29 @@ app.post("/tags", async (req, res) => {
       res.status(400).json({
         status: "failed",
         message: "no tags added",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.delete("/tags", async (req, res) => {
+  try {
+    const { category } = req.body;
+    const dbres = await client.query(
+      "DELETE FROM tags WHERE category = $1 returning * ",
+      [category]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tags: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no tags deleted",
       });
     }
   } catch (error) {
