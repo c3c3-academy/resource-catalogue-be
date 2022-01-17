@@ -153,10 +153,13 @@ app.post("/resources", async (req, res) => {
   } catch (error) {
     console.log("error: ", error);
     console.error(error);
-    res.status(400).json({
-      status: "failed",
-      error: error.response.data.message,
-    });
+    if (error.code === 23505 || error.code === "23505") {
+      res.status(403).json({
+        status: "failed",
+        message:
+          "resource could not be added: the resourcename or url already exists",
+      });
+    }
   }
 });
 
