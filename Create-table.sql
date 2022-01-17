@@ -47,9 +47,9 @@ VALUES ('Emma', false),
 
 CREATE TABLE resources(
   id SERIAL PRIMARY KEY NOT NULL,
-  resourcename VARCHAR(200) NOT NULL,
+  resourcename VARCHAR(200) NOT NULL UNIQUE,
   authorname VARCHAR(200) NOT NULL, 
-  url VARCHAR(300) NOT NULL,
+  url VARCHAR(300) NOT NULL UNIQUE,
   description VARCHAR NOT NULL,
   contenttype VARCHAR(200) NOT NULL,
   contentstage VARCHAR(200) NOT NULL,
