@@ -66,11 +66,11 @@ CREATE TABLE tags (
 );
   
 CREATE TABLE tagrelations (
-  id SERIAL Primary Key NOT NULL,
   resourceid INT NOT NULL,
   tagid INT NOT NULL,
   FOREIGN KEY (resourceid) REFERENCES resources(id),
   FOREIGN KEY (tagid) REFERENCES tags(id)
+  PRIMARY KEY (resourceid, tagid)
 ); 
    
 CREATE TABLE tostudy (
