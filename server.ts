@@ -375,8 +375,8 @@ app.delete("/tags", async (req, res) => {
   try {
     const { category } = req.body;
     const dbres = await client.query(
-      "DELETE FROM tags WHERE tagid = $1 returning * ",
-      [tagid]
+      "DELETE FROM tags WHERE category = $1 returning * ",
+      [category]
     );
     if (dbres.rows.length > 0) {
       res.status(200).json({
@@ -398,8 +398,8 @@ app.delete("/tags/:tagid", async (req, res) => {
   try {
     const tagid = req.params.tagid;
     const dbres = await client.query(
-      "DELETE FROM tags WHERE category = $1 returning * ",
-      [category]
+      "DELETE FROM tags WHERE tagid = $1 returning * ",
+      [tagid]
     );
     if (dbres.rows.length > 0) {
       res.status(200).json({
