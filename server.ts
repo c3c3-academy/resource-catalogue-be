@@ -375,6 +375,29 @@ app.delete("/tags", async (req, res) => {
   try {
     const { category } = req.body;
     const dbres = await client.query(
+      "DELETE FROM tags WHERE tagid = $1 returning * ",
+      [tagid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tags: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no tags deleted",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.delete("/tags/:tagid", async (req, res) => {
+  try {
+    const tagid = req.params.tagid;
+    const dbres = await client.query(
       "DELETE FROM tags WHERE category = $1 returning * ",
       [category]
     );
