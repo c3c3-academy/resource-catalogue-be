@@ -151,6 +151,7 @@ app.post("/resources", async (req, res) => {
       });
     }
   } catch (error) {
+    console.log("error: ", error);
     console.error(error);
     res.status(400).json({
       status: "failed",
