@@ -212,6 +212,29 @@ app.post("/tagrelations", async (req, res) => {
   }
 });
 
+app.delete("/tagrelations", async (req, res) => {
+  try {
+    const { tagid, resourceid } = req.body;
+    const dbres = await client.query(
+      "DELETE FROM tagrelations where tagid=$1 and resourceid=$2 returning *",
+      [tagid, resourceid]
+    );
+    if (dbres.rows.length > 0) {
+      res.status(200).json({
+        status: "success",
+        tagrelations: dbres.rows[0],
+      });
+    } else if (dbres.rows.length === 0) {
+      res.status(400).json({
+        status: "failed",
+        message: "no tags deleted",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 app.delete("/tostudy", async (req, res) => {
   try {
     const { userid, resourceid } = req.body;
