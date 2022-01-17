@@ -394,7 +394,7 @@ app.delete("/tags", async (req, res) => {
   }
 });
 
-app.delete("/tags/:tagid", async (req, res) => {
+app.delete("/tagsbyid/:tagid", async (req, res) => {
   try {
     const tagid = req.params.tagid;
     const dbres = await client.query(
