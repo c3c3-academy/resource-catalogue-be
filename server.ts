@@ -144,6 +144,8 @@ app.post("/resources", async (req, res) => {
         status: "success",
         resourceAdded: dbres.rows[0],
       });
+    } else if (resourcename === " ") {
+      throw new Error("this is a test");
     } else if (dbres.rows.length === 0) {
       res.status(400).json({
         status: "failed",
