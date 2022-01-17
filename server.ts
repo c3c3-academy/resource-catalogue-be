@@ -398,7 +398,7 @@ app.delete("/tagsbyid/:tagid", async (req, res) => {
   try {
     const tagid = req.params.tagid;
     const dbres = await client.query(
-      "DELETE FROM tags WHERE tagid = $1 returning * ",
+      "DELETE FROM tags WHERE id = $1 returning * ",
       [tagid]
     );
     if (dbres.rows.length > 0) {
