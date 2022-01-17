@@ -69,7 +69,7 @@ CREATE TABLE tagrelations (
   resourceid INT NOT NULL,
   tagid INT NOT NULL,
   FOREIGN KEY (resourceid) REFERENCES resources(id),
-  FOREIGN KEY (tagid) REFERENCES tags(id)
+  FOREIGN KEY (tagid) REFERENCES tags(id),
   PRIMARY KEY (resourceid, tagid)
 ); 
    
