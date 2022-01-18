@@ -27,7 +27,9 @@ app.use(cors()); //add CORS support to each following route handler
 
 app.get("/resources", async (req, res) => {
   try {
-    const dbres = await client.query("select * from resources");
+    const dbres = await client.query(
+      "select resourceid,resourcename,authorname,url,description,contenttype,contentstage,reason,isrecommended,round(avg(rating),1) from (SELECT resources.*,interactions.* FROM resources INNER JOIN interactions   ON resources.id = interactions.resourceid) as result group by (id,result.resourcename,result.authorname,result.url,result.description,result.contenttype,result.contentstage,result.isrecommended,result.reason,result.creationdate,result.resourceid,result.postedbyuserid)"
+    );
 
     if (dbres.rows.length > 0) {
       res.status(200).json({
