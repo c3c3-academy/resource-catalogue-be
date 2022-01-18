@@ -150,8 +150,8 @@ app.post("/resources", async (req, res) => {
     } else if (resourcename === " ") {
       throw new Error("this is a test");
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no resources added",
       });
     }
@@ -181,9 +181,8 @@ app.post("/tostudy", async (req, res) => {
         tostudyAdded: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
-
+      res.status(200).json({
+        status: "success",
         message: "no resources added",
       });
     }
@@ -205,8 +204,8 @@ app.post("/tagrelations", async (req, res) => {
         tagrelations: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no tags added",
       });
     }
@@ -228,8 +227,8 @@ app.delete("/tagrelations", async (req, res) => {
         tagrelations: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no tagrelations deleted",
       });
     }
@@ -267,8 +266,8 @@ app.post("/interactions", async (req, res) => {
         interactions: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no interactions added",
       });
     }
@@ -318,8 +317,8 @@ app.get("/interactions/:resourceid", async (req, res) => {
         interactions: dbres.rows,
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no interactions found",
       });
     }
@@ -341,8 +340,8 @@ app.get("/interactionsbyuser/:userid", async (req, res) => {
         interactions: dbres.rows,
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no interactions found",
       });
     }
@@ -364,8 +363,8 @@ app.post("/tags", async (req, res) => {
         tags: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no tags added",
       });
     }
@@ -387,8 +386,8 @@ app.delete("/tags", async (req, res) => {
         tags: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no tags deleted",
       });
     }
@@ -410,8 +409,8 @@ app.delete("/tagsbyid/:tagid", async (req, res) => {
         tags: dbres.rows[0],
       });
     } else if (dbres.rows.length === 0) {
-      res.status(400).json({
-        status: "failed",
+      res.status(200).json({
+        status: "success",
         message: "no tags deleted",
       });
     }
