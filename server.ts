@@ -342,7 +342,8 @@ app.get("/interactionsbyuser/:userid", async (req, res) => {
     } else if (dbres.rows.length === 0) {
       res.status(200).json({
         status: "success",
-        message: "no interactions found",
+        message: "this user has no interactions",
+        interactions: [],
       });
     }
   } catch (error) {
