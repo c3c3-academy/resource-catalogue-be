@@ -28,7 +28,7 @@ app.use(cors()); //add CORS support to each following route handler
 app.get("/resources", async (req, res) => {
   try {
     const dbres = await client.query(
-      "select id,resourcename,authorname,url,description,contenttype,contentstage,creationdate,reason,isrecommended,round(avg(rating),1) as avgrating from (SELECT resources.*,interactions.* FROM resources LEFT JOIN interactions   ON resources.id = interactions.resourceid) as result group by (id,result.resourcename,result.authorname,result.url,result.description,result.contenttype,result.contentstage,result.isrecommended,result.reason,result.creationdate,result.resourceid,result.postedbyuserid) order by creationdate desc"
+      "select id,resourcename,authorname,url,description,contenttype,contentstage,creationdate,reason,isrecommended,postedbyuserid,round(avg(rating),1) as avgrating from (SELECT resources.*,interactions.* FROM resources LEFT JOIN interactions   ON resources.id = interactions.resourceid) as result group by (id,result.resourcename,result.authorname,result.url,result.description,result.contenttype,result.contentstage,result.isrecommended,result.reason,result.creationdate,result.resourceid,result.postedbyuserid) order by creationdate desc"
     );
 
     if (dbres.rows.length > 0) {
