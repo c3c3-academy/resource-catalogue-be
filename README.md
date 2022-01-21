@@ -1,11 +1,9 @@
-# mark-fullstack-proj--starter-1
+# Willy Wonka's Resource Factory Backend
 
-## Usage:
+This is the backend respository for [Willy Wonka's Resource Factory](https://github.com/c3c3-academy/resource-catalogue-fe).
 
-Instead of cloning this project, click "Use this template".  This will allow you to create a repo on github which has this project's content but which is not a fork of it.
-
-Make sure you create the repo as being owned by your own account not by the WeAreAcademy organisation.
-
+- [Documentation](https://www.notion.so/weareacademy/Team-C3C3-Project-3-f6c294677db04465995852662384ba71)
+- [Deployed API](https://resource-catalogue-be.herokuapp.com/)
 
 ## Install
 
@@ -28,3 +26,19 @@ This will set the env var LOCAL to true, which will cause the db connection conf
 ## running on heroku
 
 When the project is deployed to heroku, the command in your `Procfile` file will be run.
+
+## Create and Populate Database
+SQL Query to Create Table
+The Create-table.sql file provides the queries used to create the tables for this project.
+
+## Running API
+### Running locally
+
+```yarn start:dev```
+
+This will set the env var LOCAL to true, which will cause the db connection configuration to NOT use SSL (appropriate for your local db)
+
+### Running on heroku
+```yarn start:dev:heroku```
+
+When the project is deployed to heroku, the command in your Procfile file will be run.
